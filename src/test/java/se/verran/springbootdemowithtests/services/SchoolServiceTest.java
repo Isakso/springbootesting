@@ -20,12 +20,11 @@ class SchoolServiceTest { private StudentService mockedStudentService;
     void setUp(){
         mockedStudentService = Mockito.mock(StudentService.class);
         schoolService = new SchoolService(mockedStudentService);
-
     }
     @Test
     void numberOfStudentsPerGroupWhenDividedIntoNumberOfGroupsWhenGroupsAreEnough() {
-        when(mockedStudentService.getAllStudents()).thenReturn(Arrays.
-                asList(new Student(), new Student(), new Student(), new Student()));
+        when(mockedStudentService.getAllStudents())
+                .thenReturn(Arrays.asList(new Student(), new Student(), new Student(), new Student()));
         String result = schoolService.numberOfStudentsPerGroupWhenDivideIntoNumberOfGroups(2);
         assertEquals("2 groups could be formed with 2 students per group", result);
     }
@@ -49,62 +48,46 @@ class SchoolServiceTest { private StudentService mockedStudentService;
     }
     @Test
     void testNumberOfGroupsWhenDividedIntoGroupsIsPossible() {
-
         when(mockedStudentService.getAllStudents()).thenReturn(Arrays.
                 asList(new Student(), new Student(), new Student(), new Student(),new Student()));
-
         String result = schoolService.numberOfGroupsWhenDividedIntoGroupsOf(2);
-
         assertEquals("2 students per group is possible, there will be 2 groups, there will be 1 student hanging", result);
     }
     @Test
     void testNumberOfStudentsDividedByStudentsPerGroupWhenNumberOfStudentsIsLessThanTwo() {
-
         when(mockedStudentService.getAllStudents()).thenReturn(Arrays.
                 asList(new Student(), new Student(), new Student(), new Student()));
-
         String result = schoolService.numberOfGroupsWhenDividedIntoGroupsOf(3);
-
         assertEquals("Not able to manage groups of 3 with only 4 students", result);
     }
-
     @Test
     void testNumberOfStudentsPerGroupWhenDivideIntoNumberOfGroupsWhenTheresNoRemainder() {
         when(mockedStudentService.getAllStudents()).thenReturn(Arrays.
                 asList(new Student(), new Student(), new Student(), new Student(),new Student(),
                         new Student(), new Student(),new Student()));
-
         String result = schoolService.numberOfStudentsPerGroupWhenDivideIntoNumberOfGroups(4);
-
         assertEquals("4 groups could be formed with 2 students per group", result);
     }
     @Test
     void testNumberOfStudentsPerGroupWhenDivideIntoNumberOfGroupsWithOneLeftoverStudent() {
         when(mockedStudentService.getAllStudents()).thenReturn(Arrays.asList(new Student(), new Student(),new Student(), new Student(), new Student()));
-
         String result = schoolService.numberOfStudentsPerGroupWhenDivideIntoNumberOfGroups(2);
-
         assertEquals("2 groups could be formed with 2 students per group, but that would leave 1 student hanging", result);
     }
     @Test
     void calculateAverageGrade() {
-
         // no need to mock student class since it lacks complicated business logic
-
         Student student1 = new Student();
         student1.setJavaProgrammingGrade(90.0);
         Student student2 = new Student();
         student2.setJavaProgrammingGrade(80.0);
         when(mockedStudentService.getAllStudents()).thenReturn(Arrays.asList(student1, student2));
-
         String result = schoolService.calculateAverageGrade();
-
         assertEquals("Average grade is 85.0", result);
     }
     @Test
     void testCalculateAverageGradeWhenThereNoStudents() {
         when(mockedStudentService.getAllStudents()).thenReturn(Collections.emptyList());
-
         assertThrows(ResponseStatusException.class, () -> schoolService.calculateAverageGrade());
     }
     @Test
@@ -117,13 +100,10 @@ class SchoolServiceTest { private StudentService mockedStudentService;
             Student student3 = new Student();
             student3.setJavaProgrammingGrade(70.0);
             when(mockedStudentService.getAllStudents()).thenReturn(Arrays.asList(student1, student2, student3));
-
             List<Student> result = schoolService.getTopScoringStudents();
             assertEquals(1, result.size());
             assertEquals(90.0, result.get(0).getJavaProgrammingGrade());
-
     }
-
 }
 
 
