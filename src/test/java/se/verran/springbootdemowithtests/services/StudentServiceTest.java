@@ -38,8 +38,8 @@ class StudentServiceTest {
         when(mockedStudentRepository.save(student)).thenReturn(student);
         //then
         Student result = studentService.addStudent(student);
-        assertEquals(student, result);
         verify(mockedStudentRepository, times(1)).save(student);
+        assertEquals(student, result);
 
     }
     @Test
@@ -51,8 +51,8 @@ class StudentServiceTest {
         when(mockedStudentRepository.existsStudentByEmail(student.getEmail())).thenReturn(true);
         //then
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> studentService.addStudent(student));
-        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
         verify(mockedStudentRepository, never()).save(any(Student.class));
+        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
     }
 
     @Test
@@ -64,9 +64,9 @@ class StudentServiceTest {
         when(mockedStudentRepository.findAll()).thenReturn(students);
 
         List<Student> result = studentService.getAllStudents();
-
-        assertEquals(students, result);
         verify(mockedStudentRepository, times(1)).findAll();
+        assertEquals(students, result);
+
     }
 
     @Test
@@ -102,15 +102,14 @@ class StudentServiceTest {
 
     @Test
     void updateStudentShouldThrowNotFoundWhenIdDoesNotExist() {
-        // Arrange
-        Student student = new Student();
+
+        Student student = new Student();// given
         student.setId(1);
         when(mockedStudentRepository.existsById(student.getId())).thenReturn(false);
-
-        // Act & Assert
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> studentService.updateStudent(student));
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         verify(mockedStudentRepository, never()).save(any(Student.class));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+
     }
     @Test
     void getStudentByIdShouldReturnStudentWhenIdExists() {
@@ -118,9 +117,7 @@ class StudentServiceTest {
         Student student = new Student();
         student.setId(studentId);
         when(mockedStudentRepository.findById(studentId)).thenReturn(Optional.of(student));
-
         Student result = studentService.getStudentById(studentId);
-
         assertEquals(student, result);
         verify(mockedStudentRepository, times(1)).findById(studentId);
     }
@@ -129,10 +126,10 @@ class StudentServiceTest {
 
         int studentId = 1;
         when(mockedStudentRepository.findById(studentId)).thenReturn(Optional.empty());
-
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> studentService.getStudentById(studentId));
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         verify(mockedStudentRepository, times(1)).findById(studentId);
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+
     }
 
     @Test
@@ -144,34 +141,27 @@ class StudentServiceTest {
         student.setId(studentId);
         when(mockedStudentRepository.findById(studentId)).thenReturn(Optional.of(student));
         when(mockedStudentRepository.save(student)).thenReturn(student);
-
-
         Student result = studentService.setGradeForStudentById(studentId, gradeAsString);
-
-
-        assertEquals(4.0, result.getJavaProgrammingGrade());
         verify(mockedStudentRepository, times(1)).save(student);
+        assertEquals(4.0, result.getJavaProgrammingGrade());
     }
     @Test
     void setGradeForStudentByIdShouldThrowNotAcceptableWhenGradeIsInvalid() {
 
         int studentId = 1;
         String gradeAsString = "invalidGrade";
-
-
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> studentService.setGradeForStudentById(studentId, gradeAsString));
-        assertEquals(HttpStatus.NOT_ACCEPTABLE, exception.getStatusCode());
         verify(mockedStudentRepository, never()).save(any(Student.class));
+        assertEquals(HttpStatus.NOT_ACCEPTABLE, exception.getStatusCode());
     }
     @Test
     void setGradeForStudentByIdShouldThrowNotAcceptableWhenGradeIsOutOfRange() {
-
         int studentId = 1;
         String gradeAsString = "A";
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> studentService.setGradeForStudentById(studentId, gradeAsString));
-        assertEquals(HttpStatus.NOT_ACCEPTABLE, exception.getStatusCode());
         verify(mockedStudentRepository, never()).save(any(Student.class));
-    }
+        assertEquals(HttpStatus.NOT_ACCEPTABLE, exception.getStatusCode());
 
+    }
 
 }

@@ -2,6 +2,7 @@ package se.verran.springbootdemowithtests.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.server.ResponseStatusException;
 import se.verran.springbootdemowithtests.entities.Student;
@@ -13,7 +14,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class SchoolServiceTest { private StudentService mockedStudentService;
+class SchoolServiceTest {
+    private StudentService mockedStudentService;
     private SchoolService schoolService;
 
     @BeforeEach
@@ -29,25 +31,28 @@ class SchoolServiceTest { private StudentService mockedStudentService;
         assertEquals("2 groups could be formed with 2 students per group", result);
     }
     @Test
-    void numberOfGroupsWhenDividedIntoNumberOfWhenNotEnoughStudentsForGroups() {
+    void numberOfGroupsWhenDividedIntoNumberOfGroupsWhenNotEnoughStudentsForGroups() {
            when(mockedStudentService.getAllStudents()).thenReturn(Arrays.asList(new Student()));
             String result = schoolService.numberOfStudentsPerGroupWhenDivideIntoNumberOfGroups(2);
             assertEquals("Not able to divide 1 students into 2 groups", result);
     }
     @Test
     void numberOfStudentsInTheGroupIsLessThanTwo() {
-        when(mockedStudentService.getAllStudents()).thenReturn(Arrays.asList(new Student(),new Student()));
+        when(mockedStudentService.getAllStudents()).thenReturn(Arrays.asList(new Student(),new Student(),new Student(),new Student()
+                ,new Student(),new Student()));
         String result = schoolService.numberOfStudentsPerGroupWhenDivideIntoNumberOfGroups(1);
         assertEquals("There should be at least two groups", result);
     }
     @Test
-    void testNumberOfStudentsPerGroupWhenDivideIntoNumberOfGroupsWhenTooFewGroups() {
-        when(mockedStudentService.getAllStudents()).thenReturn(Arrays.asList(new Student(), new Student()));// you have two students
+    void numberOfStudentsPerGroupDividedIntoNumberOfGroupsWhenThereAreTooFewGroups() {
+        when(mockedStudentService.getAllStudents()).thenReturn(Arrays.
+                asList(new Student(), new Student(),new Student(),
+                        new Student(),new Student(), new Student()));// you have two students
         String result = schoolService.numberOfStudentsPerGroupWhenDivideIntoNumberOfGroups(1);
         assertEquals("There should be at least two groups", result);
     }
     @Test
-    void testNumberOfGroupsWhenDividedIntoGroupsIsPossible() {
+    void whenNumberOfGroupsWhenDividedIntoGroupsIsPossible() {
         when(mockedStudentService.getAllStudents()).thenReturn(Arrays.
                 asList(new Student(), new Student(), new Student(), new Student(),new Student()));
         String result = schoolService.numberOfGroupsWhenDividedIntoGroupsOf(2);
